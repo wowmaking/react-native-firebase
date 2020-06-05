@@ -234,8 +234,6 @@ export function parseSnapshotArgs(args) {
   return { snapshotListenOptions, callback, onNext, onError };
 }
 
-
-
 export function parseSnapshotInSyncArgs(args) {
   if (args.length === 0) {
     throw new Error('expected at least one argument.');

@@ -1942,7 +1942,7 @@ export namespace FirebaseFirestoreTypes {
 
     /**
      * Attaches a listener for a snapshots-in-sync event.
-     * The snapshots-in-sync event indicates that all listeners affected by a given change have fired, even 
+     * The snapshots-in-sync event indicates that all listeners affected by a given change have fired, even
      * if a single server-generated change affects multiple listeners.
      *
      * NOTE: The snapshots-in-sync event only indicates that listeners are in sync with each other, but does
