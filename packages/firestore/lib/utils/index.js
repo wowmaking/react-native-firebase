@@ -252,7 +252,7 @@ export function parseSnapshotInSyncArgs(args) {
    */
   if (isFunction(args[0])) {
     /**
-     * .onSnapshot((snapshot) => {}, (error) => {}
+     * .onSnapshot(() => {}, (error) => {}
      */
     if (isFunction(args[1])) {
       onNext = args[0];
@@ -266,7 +266,7 @@ export function parseSnapshotInSyncArgs(args) {
   }
 
   /**
-   * .onSnapshot({ complete: () => {}, error: (e) => {}, next: (snapshot) => {} })
+   * .onSnapshot({ complete: () => {}, error: (e) => {}, next: () => {} })
    */
   if (isObject(args[0]) && args[0].includeMetadataChanges === undefined) {
     if (args[0].error) {

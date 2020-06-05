@@ -17,7 +17,7 @@
 
 const { wipe } = require('./helpers');
 
-describe('firestore()', () => {
+describe.only('firestore()', () => {
   before(() => wipe());
 
   describe('namespace', () => {
@@ -318,40 +318,132 @@ describe('firestore()', () => {
       }
     });
 
-    it('fires after onSnapshot listeners have fired', async () => {
-      let snap1 = 0;
-      let snap2 = 0;
-      let sync = 0;
+    describe('onSnapshotsInSync fires after onSnapshot listeners have fired', () => {
+      it('fires after passing in single function', async () => {
+        let snap1 = 0;
+        let snap2 = 0;
+        let sync = 0;
 
-      const unsubscribe = firebase
-        .firestore()
-        .collection('v6')
-        .onSnapshot(() => {
-          snap1 = Date.now();
+        const unsubscribe = firebase
+          .firestore()
+          .collection('v6')
+          .onSnapshot(() => {
+            snap1 = Date.now();
+          });
+
+        const unsubscribe2 = firebase
+          .firestore()
+          .collection('v6')
+          .onSnapshot(() => {
+            snap2 = Date.now();
+          });
+
+        const unsubscribe3 = firebase.firestore().onSnapshotsInSync(() => {
+          sync = Date.now();
         });
 
-      const unsubscribe2 = firebase
-        .firestore()
-        .collection('v6')
-        .onSnapshot(() => {
-          snap2 = Date.now();
-        });
+        const ref = await firebase
+          .firestore()
+          .collection('v6')
+          .add({ foo: 'bar' });
 
-      const unsubscribe3 = firebase.firestore().onSnapshotsInSync(() => {
-        sync = Date.now();
+        should(snap1).be.belowOrEqual(sync);
+        should(snap2).be.belowOrEqual(sync);
+
+        await ref.delete();
+        unsubscribe();
+        unsubscribe2();
+        unsubscribe3();
       });
 
-      await firebase
-        .firestore()
-        .collection('v6')
-        .add({ foo: 'bar' });
+      it('fires after passing in object with functions', async () => {
+        let snap1 = 0;
+        let snap2 = 0;
+        let sync = 0;
 
-      should(snap1).be.belowOrEqual(sync);
-      should(snap2).be.belowOrEqual(sync);
+        const unsubscribe = firebase
+          .firestore()
+          .collection('v6')
+          .onSnapshot(() => {
+            snap1 = Date.now();
+          });
 
-      unsubscribe();
-      unsubscribe2();
-      unsubscribe3();
+        const unsubscribe2 = firebase
+          .firestore()
+          .collection('v6')
+          .onSnapshot(() => {
+            snap2 = Date.now();
+          });
+
+        const onNext = () => {
+          sync = Date.now();
+        };
+
+        const onError = () => {};
+        const onComplete = () => {};
+
+        const functions = {
+          complete: onComplete,
+          next: onNext,
+          error: onError,
+        };
+
+        const unsubscribe3 = firebase.firestore().onSnapshotsInSync(functions);
+
+        const ref = await firebase
+          .firestore()
+          .collection('v6')
+          .add({ foo: 'bar' });
+
+        should(snap1).be.belowOrEqual(sync);
+        should(snap2).be.belowOrEqual(sync);
+
+        await ref.delete();
+        unsubscribe();
+        unsubscribe2();
+        unsubscribe3();
+      });
+
+      it('fires after passing in two functions', async () => {
+        let snap1 = 0;
+        let snap2 = 0;
+        let sync = 0;
+
+        const unsubscribe = firebase
+          .firestore()
+          .collection('v6')
+          .onSnapshot(() => {
+            snap1 = Date.now();
+          });
+
+        const unsubscribe2 = firebase
+          .firestore()
+          .collection('v6')
+          .onSnapshot(() => {
+            snap2 = Date.now();
+          });
+
+        const onNext = () => {
+          sync = Date.now();
+        };
+
+        const onError = () => {};
+
+        const unsubscribe3 = firebase.firestore().onSnapshotsInSync(onNext, onError);
+
+        const ref = await firebase
+          .firestore()
+          .collection('v6')
+          .add({ foo: 'bar' });
+
+        should(snap1).be.belowOrEqual(sync);
+        should(snap2).be.belowOrEqual(sync);
+
+        await ref.delete();
+        unsubscribe();
+        unsubscribe2();
+        unsubscribe3();
+      });
     });
   });
 });
