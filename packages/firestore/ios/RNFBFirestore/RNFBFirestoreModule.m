@@ -124,16 +124,16 @@ RCT_EXPORT_METHOD(onSnapshotsInSync:
     : (RCTPromiseResolveBlock) resolve
     : (RCTPromiseRejectBlock)reject
 ) {
-    __weak RNFBFirestoreModule *weakSelf = self;
+  __weak RNFBFirestoreModule *weakSelf = self;
   [[RNFBFirestoreCommon getFirestoreForApp:firebaseApp] addSnapshotsInSyncListener:^(void) {
-      id <FIRListenerRegistration> listener = onSnapshotInSyncListeners[listenerId];
-      [weakSelf sendSnapshotInSyncEvent:firebaseApp listenerId:listenerId];
+    id <FIRListenerRegistration> listener = onSnapshotInSyncListeners[listenerId];
+    [weakSelf sendSnapshotInSyncEvent:firebaseApp listenerId:listenerId];
   }];
 }
 
 RCT_EXPORT_METHOD(offOnSnapshotsInSync:
   (FIRApp *) firebaseApp
-  :(nonnull NSNumber *)listenerId
+    :(nonnull NSNumber *)listenerId
 ) {
   id <FIRListenerRegistration> listener = onSnapshotInSyncListeners[listenerId];
   if (listener) {
@@ -142,12 +142,13 @@ RCT_EXPORT_METHOD(offOnSnapshotsInSync:
   }
 }
 
-- (void)sendSnapshotInSyncEvent:(FIRApp *)firApp
-               listenerId:(nonnull NSNumber *)listenerId {
+- (void)sendSnapshotInSyncEvent:
+  (FIRApp *)firApp
+    listenerId:(nonnull NSNumber *)listenerId {
   [[RNFBRCTEventEmitter shared] sendEventWithName:RNFB_FIRESTORE_ON_SNAPSHOT_IN_SYNC body:@{
-      @"appName": [RNFBSharedUtils getAppJavaScriptName:firApp.name],
-      @"listenerId": listenerId,
-      @"body":@{}
+    @"appName": [RNFBSharedUtils getAppJavaScriptName:firApp.name],
+    @"listenerId": listenerId,
+    @"body":@{}
   }];
 }
 
