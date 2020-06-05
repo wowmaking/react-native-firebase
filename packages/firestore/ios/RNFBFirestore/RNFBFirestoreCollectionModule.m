@@ -158,7 +158,7 @@ RCT_EXPORT_METHOD(collectionGet:
                listenerId:(nonnull NSNumber *)listenerId
                  snapshot:(FIRQuerySnapshot *)snapshot
    includeMetadataChanges:(BOOL)includeMetadataChanges {
-  NSDictionary *serialized = [RNFBFirestoreSerialize querySnapshotToDictionary:@"onSnapshot" snapshot:snapshot includeMetadataChanges:includeMetadataChanges];
+  NSDictionary *serialized = [RNFBFirestoreSerialize querySnapshotToDictionary:@"onSnapshot" snapshot:snapshot includeMetadataChanges:includeMetadataChanges];   
   [[RNFBRCTEventEmitter shared] sendEventWithName:RNFB_FIRESTORE_COLLECTION_SYNC body:@{
       @"appName": [RNFBSharedUtils getAppJavaScriptName:firApp.name],
       @"listenerId": listenerId,

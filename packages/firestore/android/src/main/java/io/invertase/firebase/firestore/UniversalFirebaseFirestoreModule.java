@@ -20,8 +20,6 @@ package io.invertase.firebase.firestore;
 import android.content.Context;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import io.invertase.firebase.common.UniversalFirebaseModule;
 import io.invertase.firebase.common.UniversalFirebasePreferences;
 

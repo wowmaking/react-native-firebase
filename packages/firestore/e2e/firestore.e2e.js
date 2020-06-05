@@ -317,5 +317,41 @@ describe('firestore()', () => {
         return Promise.resolve();
       }
     });
+
+    it('fires after onSnapshot listeners have fired', async () => {
+      let snap1 = 0;
+      let snap2 = 0;
+      let sync = 0;
+
+      const unsubscribe = firebase
+        .firestore()
+        .collection('v6')
+        .onSnapshot(() => {
+          snap1 = Date.now();
+        });
+
+      const unsubscribe2 = firebase
+        .firestore()
+        .collection('v6')
+        .onSnapshot(() => {
+          snap2 = Date.now();
+        });
+
+      const unsubscribe3 = firebase.firestore().onSnapshotsInSync(() => {
+        sync = Date.now();
+      });
+
+      await firebase
+        .firestore()
+        .collection('v6')
+        .add({ foo: 'bar' });
+
+      should(snap1).be.belowOrEqual(sync);
+      should(snap2).be.belowOrEqual(sync);
+
+      unsubscribe();
+      unsubscribe2();
+      unsubscribe3();
+    });
   });
 });
