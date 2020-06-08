@@ -109,7 +109,7 @@ public class ReactNativeFirebaseFirestoreModule extends ReactNativeFirebaseModul
 
     final Runnable listener = () -> sendOnSnapshotEvent(appName, listenerId);
 
-    ListenerRegistration listenerRegistration = firebaseFirestore.addSnapshotsInSyncListener(listener);
+    ListenerRegistration listenerRegistration = firebaseFirestore.addSnapshotsInSyncListener(getExecutor(), listener);
 
     snapshotsInSyncListeners.put(listenerId, listenerRegistration);
   }
@@ -117,7 +117,7 @@ public class ReactNativeFirebaseFirestoreModule extends ReactNativeFirebaseModul
   private void sendOnSnapshotEvent(String appName, int listenerId) {
     ReactNativeFirebaseEventEmitter emitter = ReactNativeFirebaseEventEmitter.getSharedInstance();
     WritableMap body = Arguments.createMap();
-    
+
     emitter.sendEvent(new ReactNativeFirebaseFirestoreEvent(
       ReactNativeFirebaseFirestoreEvent.SNAPSHOT_IN_SYNC,
       body,
