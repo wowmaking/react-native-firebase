@@ -17,7 +17,7 @@
 
 const { wipe } = require('./helpers');
 
-describe.only('firestore()', () => {
+describe('firestore()', () => {
   before(() => wipe());
 
   describe('namespace', () => {
