@@ -151,5 +151,36 @@ RCT_EXPORT_METHOD(offOnSnapshotsInSync:
     @"body":@{}
   }];
 }
+RCT_EXPORT_METHOD(clearPersistence:
+  (FIRApp *) firebaseApp
+    : (RCTPromiseResolveBlock) resolve
+    : (RCTPromiseRejectBlock)reject
+) {
+  [[RNFBFirestoreCommon getFirestoreForApp:firebaseApp] clearPersistenceWithCompletion:^(NSError *error) {
+    if (error) {
+      [RNFBFirestoreCommon promiseRejectFirestoreException:reject error:error];
+    } else {
+      resolve(nil);
+    }
+  }];
+}
+
+RCT_EXPORT_METHOD(terminate:
+  (FIRApp *) firebaseApp
+    : (RCTPromiseResolveBlock) resolve
+    : (RCTPromiseRejectBlock)reject
+) {
+    FIRFirestore *instance = [RNFBFirestoreCommon getFirestoreForApp:firebaseApp];
+    
+    [instance terminateWithCompletion:^(NSError *error) {
+      if (error) {
+        [RNFBFirestoreCommon promiseRejectFirestoreException:reject error:error];
+      } else {
+        [instanceCache removeObjectForKey: [firebaseApp name]];
+        resolve(nil);
+      }
+    }];
+}
+
 
 @end

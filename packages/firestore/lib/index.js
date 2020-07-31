@@ -22,6 +22,7 @@ import {
   isObject,
   isString,
   isUndefined,
+  isAndroid,
 } from '@react-native-firebase/app/lib/common';
 import {
   createModuleNamespace,
@@ -90,6 +91,14 @@ class FirebaseFirestoreModule extends FirebaseModule {
     return new FirestoreWriteBatch(this);
   }
 
+  async clearPersistence() {
+    await this.native.clearPersistence();
+  }
+
+  async terminate() {
+    await this.native.terminate();
+  }
+
   collection(collectionPath) {
     if (!isString(collectionPath)) {
       throw new Error(
@@ -140,8 +149,8 @@ class FirebaseFirestoreModule extends FirebaseModule {
     );
   }
 
-  disableNetwork() {
-    return this.native.disableNetwork();
+  async disableNetwork() {
+    await this.native.disableNetwork();
   }
 
   doc(documentPath) {
@@ -162,8 +171,8 @@ class FirebaseFirestoreModule extends FirebaseModule {
     return new FirestoreDocumentReference(this, path);
   }
 
-  enableNetwork() {
-    return this.native.enableNetwork();
+  async enableNetwork() {
+    await this.native.enableNetwork();
   }
 
   runTransaction(updateFunction) {
@@ -220,6 +229,15 @@ class FirebaseFirestoreModule extends FirebaseModule {
         throw new Error(
           "firebase.firestore().settings(*) 'settings.host' must not be an empty string.",
         );
+      }
+
+      if (isAndroid) {
+        if (settings.host.startsWith('localhost')) {
+          settings.host = settings.host.replace('localhost', '10.0.2.2');
+        }
+        if (settings.host.startsWith('127.0.0.1')) {
+          settings.host = settings.host.replace('127.0.0.1', '10.0.2.2');
+        }
       }
     }
 
