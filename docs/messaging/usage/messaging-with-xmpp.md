@@ -1,6 +1,8 @@
 ---
 title: Messaging with XMPP
 description: To send and recieve messages with FCM requires additional steps to ensure listeners are correctly working.
+next: /messaging/usage
+previous: /messaging/usage/installation/ios
 ---
 
 This page demonstrates how to send and receive messages through a custom server. This will have to be deployed separately.
