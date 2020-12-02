@@ -1170,6 +1170,21 @@ export namespace FirebaseAdMobTypes {
    */
   export class Module extends FirebaseModule {
     /**
+     * Initializes AdMob to prepare for ad requests
+     * 
+     * #### Example
+     * 
+     * ```js
+     * import admob, { MaxAdContentRating } from '@react-native-firebase/admob';
+     *
+     * await admob().initialize();
+     * 
+     * // Request as here...
+     * ```
+     */
+    initialize(): Promise<Object>;
+
+    /**
      * Sets request options for all future ad requests.
      *
      * #### Example

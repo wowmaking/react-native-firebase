@@ -23,6 +23,9 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.Objects;
 
@@ -33,6 +36,21 @@ public class ReactNativeFirebaseAdMobModule extends ReactNativeFirebaseModule {
 
   ReactNativeFirebaseAdMobModule(ReactApplicationContext reactContext) {
     super(reactContext, SERVICE);
+  }
+
+  @ReactMethod
+  public void initialize(Promise promise) {
+    if(getCurrentActivity() == null) {
+      promise.reject("CurrentActivity is null");
+      return;
+    }
+
+    MobileAds.initialize(getCurrentActivity(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+              promise.resolve();
+            }
+        });
   }
 
   private RequestConfiguration buildRequestConfiguration(ReadableMap requestConfiguration) {

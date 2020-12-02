@@ -61,6 +61,10 @@ class FirebaseAdMobModule extends FirebaseModule {
     });
   }
 
+  initialize() {
+    return this.native.initialize();
+  }
+
   setRequestConfiguration(requestConfiguration) {
     let config;
     try {

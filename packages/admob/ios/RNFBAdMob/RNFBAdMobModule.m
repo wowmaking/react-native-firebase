@@ -35,6 +35,29 @@ RCT_EXPORT_MODULE();
 #pragma mark -
 #pragma mark Firebase Admob Methods
 
+RCT_EXPORT_METHOD(initialize
+  :(RCTPromiseResolveBlock)resolve
+  :(RCTPromiseRejectBlock)reject
+) {
+    [GADMobileAds.sharedInstance startWithCompletionHandler:^(GADInitializationStatus *status) {
+        NSDictionary *adapterStatuses = [status adapterStatusesByClassName];
+        NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:adapterStatuses.count];
+        for (NSString *adapter in adapterStatuses) {
+            GADAdapterStatus *adapterStatus = adapterStatuses[adapter];
+            NSDictionary *adapterInfo = @{
+                @"name": adapter,
+                @"latency": [NSNumber numberWithFloat:adapterStatus.latency],
+                @"description": adapterStatus.description
+            };
+            [result setObject: adapterInfo forKey: adapter];
+#ifdef DEBUG
+            NSLog(@"Adapter Name: %@, Description: %@, Latency: %f", adapter,
+                  adapterStatus.description, adapterStatus.latency);
+#endif
+        }
+        resolve(@[result]);
+    }];
+}
 
 RCT_EXPORT_METHOD(setRequestConfiguration:
   (NSDictionary *) requestConfiguration
