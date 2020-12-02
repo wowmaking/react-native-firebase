@@ -48,7 +48,7 @@ public class ReactNativeFirebaseAdMobModule extends ReactNativeFirebaseModule {
     MobileAds.initialize(getCurrentActivity(), new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
-              promise.resolve();
+              promise.resolve(null);
             }
         });
   }
